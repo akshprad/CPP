@@ -1,0 +1,122 @@
+
+
+#include<iostream>
+using namespace std;
+class tbt;
+
+ class tbtnode
+{
+	char data[10];
+    int  rbit;
+    int lbit;
+    tbtnode *right;
+    tbtnode *left;
+
+    public:
+    tbtnode();
+    friend class tbt;
+};
+
+
+tbtnode:: tbtnode()
+{
+	rbit=lbit=1;
+}
+
+
+
+class tbt
+{
+	tbtnode *head;
+public:
+	void create();
+	void inorder();
+	tbtnode inordersucc(tbtnode *temp);
+	tbt();
+};
+
+tbt:: tbt()
+{
+	head=new tbtnode;            //allocate memory for head
+	head->rbit=0;                 //initialize head's rbit to 0
+	head->right=head->left=head;  //assign head->left and right to head
+}
+
+void tbt::create()
+{   char cont;
+	tbtnode *root, *temp;               //allocate memory for root
+	root=new tbtnode;
+	cout<<"\n Enter data ";
+	cin>>root->data;            //accept root data
+	head->lbit=0;               //assign head's lbit to 0
+	root->left=head->right;     //assign root->left to right o head
+	head->left=root;            //assign head's left to root
+
+	do
+	{   char choice;
+		int flag=0;                //initialize flag to 0
+		temp=root;
+		tbtnode *curr;             //allocate mem to curr and accept curr->data
+		cout<<"\n enter data for curr";
+		cin>>curr->data;
+		while(flag==0)
+		{
+			cout<<"\n enter choice l or r";
+			cin>>choice;
+			if(choice=='l' || choice=='L')
+			{
+				if(temp->lbit==1)  //if temp's left is NULL
+				{
+					curr->right=temp;
+					curr->left=temp->left;
+					temp->left=curr;
+					temp->lbit=0;
+					flag=1;
+				}
+				else temp=temp->left;
+			}
+			if(choice=='r' || choice=='R')
+			{
+				if(temp->rbit==1)
+				{
+					curr->left=temp;
+					curr->right=temp->right;
+					temp->right=curr;
+					temp->rbit=0;
+					flag=1;
+				}
+			 else temp=temp->right;
+			}
+		}
+		cout<<"Do you wish to continue?";
+		cin>>cont;
+	}while(cont=='y' || cont=='Y');
+}
+void tbt:: inorder()
+{   tbtnode  *temp;
+	temp=head;
+	while(1)
+	{
+		temp=inordersucc(temp);
+		if(temp==head) break;
+		cout<<"\n"<<temp->data;
+	}
+}
+tbtnode tbt::  inordersucc(tbtnode  *temp)
+{ tbtnode *x;
+	x=temp->right;
+	if(temp->rbit==0)
+	{
+		while(x->lbit==0)
+			x=x->left;
+	}
+	return x;
+}
+
+int main()
+{
+tbt T1;
+T1.create();
+T1.inorder();
+
+}
