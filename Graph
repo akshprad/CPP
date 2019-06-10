@@ -1,0 +1,426 @@
+/*
+NAME: AKSHADA PRADHAN
+CLASS:PANEL 5
+BATCH:E1
+PROBLEM STATEMENT:GRAPH
+*/
+
+
+
+#include<iostream>
+using namespace std;
+#define MAX 20
+
+class node
+{
+  string name;
+  node *next;
+  friend class graph;
+};
+
+class graph
+{
+   node *head[MAX];
+   int n;
+   int visited[MAX];
+   public:
+    graph()
+    {
+      for(int i=0;i<MAX;i++)
+        head[i]=NULL;
+    }
+    void create_graph();
+    void display_graph();
+    int search_index(node*);
+    void DFS(int);
+    void DFS_r();
+    void DFS_nr();
+    void BFS_nr();
+};
+
+
+class stack//stack used for non recursive traversals
+{
+int top;
+node *data[100];
+
+public:
+stack()
+{
+top=-1;
+}
+
+
+void push(node *t)
+{
+	top++;
+	data[top]=t;
+}
+
+node *pop()
+{
+	node *tem=data[top];
+	top--;
+	return (tem);
+}
+
+int isempty()
+{
+	if(top==-1)
+	return (0);
+	else
+	return (1);
+}
+};
+
+class queue//queue used for BFS traversal
+{
+int front,rear;
+node *d[100];
+
+public:
+queue()
+{
+front=-1;
+rear=-1;
+}
+
+void insert(node *t)
+{
+	rear++;
+	d[rear]=t;
+}
+
+node *dequeue()
+{
+	front++;
+	node *tem=d[front];
+	return (tem);
+}
+
+int qisempty()
+{
+	if(front == rear)
+	return (0);
+	else
+	return (1);
+}
+};
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+void graph::create_graph()
+{
+   int i;
+   char ch;
+   node *temp,*curr;
+   cout<<"Enter no. of User: ";
+   cin>>n;
+   for(i=0;i<n;i++)
+   {
+     head[i]=new node();
+     cout<<"\nEnter Head name of "<<i+1<<" User: ";
+     cin>>head[i]->name;
+     head[i]->next=NULL;     
+   }
+   for(i=0;i<n;i++)
+   {
+      temp=head[i];
+      do
+        {
+          cout<<"\nEnter name of friend of "<<head[i]->name<<" : ";
+          curr = new node();
+          cin>>curr->name;
+          curr->next=NULL;
+          temp->next=curr;
+          temp=curr;
+          cout<<"Do you want to add more friends (y/n): ";
+          cin>>ch; 
+        }while(ch=='y');
+   }
+}
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+void graph::display_graph()
+{
+   int i;
+   node *temp;
+   for(i=0;i<n;i++)
+   {
+     cout<<"\nFriends of "<<head[i]->name<<" are:\n";
+     temp=head[i];
+     while(temp!=NULL)
+     {
+       cout<<temp->name<<"->";
+       temp=temp->next;
+     }
+     cout<<endl<<endl;
+   }
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+int graph::search_index(node *temp)
+{
+  int i;
+  for(i=0;i<n;i++)
+  {
+    if(head[i]->name==temp->name)
+        return i;
+  }
+}
+
+
+void graph::DFS_r()
+{
+   node *t;
+   int i,index;
+   t=new node();
+   cout<<"\nEnter the name of starting User : ";
+   cin>>t->name;
+   cout<<"\nThe Depth First Traveral is :\n";
+   for(i=0;i<n;i++)
+   {visited[i]=0;}
+   index=search_index(t);
+   DFS(index);
+   cout<<endl<<endl;
+}
+
+
+void graph::DFS(int index)
+{
+  int x;
+  node *temp;
+  cout<<head[index]->name<<"->";
+  visited[index]=1;
+  temp=head[index];
+  while(temp!=NULL)
+  {
+    x=search_index(temp);
+    if(visited[x]==0)
+     {DFS(x);}
+     temp=temp->next;
+  }
+}
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+void graph::DFS_nr()
+{
+  stack s;
+  node *t,*temp;
+  int i,index;
+  t=new node();
+  cout<<"\nEnter the name of starting User : ";
+  cin>>t->name;
+  cout<<"\nThe Breadth First Traveral is :\n";
+  for(i=0;i<n;i++)
+  {visited[i]=0;}  
+
+  s.push(t);
+  do
+  {
+    t=s.pop();
+    index=search_index(t);
+    cout<<t->name<<endl;
+    visited[index]=1;   
+    
+    temp=head[index];
+    while(temp!=NULL)
+    {
+         index=search_index(temp);
+         if(visited[index]==0)
+         {
+            s.push(temp);
+            visited[index]=1;
+         }
+         temp=temp->next;
+    }  
+  }while(s.isempty()!=0); 
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+void graph::BFS_nr()
+{
+  queue q;
+  node *t,*temp;
+  int i,index;
+  t=new node();
+  cout<<"\nEnter the name of starting User : ";
+  cin>>t->name;
+  cout<<"\nThe Breadth First Traveral is :\n";
+  for(i=0;i<n;i++)
+  {visited[i]=0;}  
+
+  q.insert(t);
+  while(q.qisempty()!=0)
+  {
+    t=q.dequeue();
+    index=search_index(t);
+    cout<<t->name<<endl;
+    visited[index]=1;   
+    
+    temp=head[index];
+    while(temp!=NULL)
+    {
+         index=search_index(temp);
+         if(visited[index]==0)
+         {
+            q.insert(temp);
+            visited[index]=1;
+         }
+         temp=temp->next;
+    }  
+  } 
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+int main()
+{
+  	graph g;
+        char x;
+	int chc,s;
+	string key;
+	do//do statement
+	{
+
+		cout<<"*****MENU*****"<<endl;
+		cout<<"1.CREATE GRAPH"<<endl;
+		cout<<"2.DISPLAY ADJACENCY LIST"<<endl;
+		cout<<"3.DEPTH FIRST TRAVERSAL(recursive)"<<endl;
+		cout<<"4.DEPTH FIRST TRAVERSAL(non-recursive)"<<endl;
+		cout<<"5.BREADTH FIRST TRAVERSAL(non-recursive)"<<endl;
+	
+		cin>>chc;//accepting choice from the user
+			switch(chc)//switch case
+			{
+			   case 1:
+	                          g.create_graph();
+        			       	  break;
+					 
+			   case 2:
+	                          g.display_graph();
+            			 	  break;
+					 
+			   case 3:
+	                          g.DFS_r();
+	                      	  break;
+
+			   case 4:
+	                          g.DFS_nr();
+	                      	  break;
+
+			   case 5:
+	                          g.BFS_nr();
+	                      	  break;
+	                      	  	                      	  
+			   default:cout<<"YOU HAVE ENTERED THE WRONG OPTION"<<endl;//default statement
+				
+			}
+	cout<<"DO YOU WANT MAIN MENU (yes=1):"<<endl;
+	cin>>s;
+	}while(s==1);//while statement of do-while loop
+	return 0;
+}
+
+/*
+OUTPUT:
+mitwpu@C04L0927A:~$ g++ asn5.cpp
+mitwpu@C04L0927A:~$ ./a.out
+*****MENU*****
+1.CREATE GRAPH
+2.DISPLAY ADJACENCY LIST
+3.DEPTH FIRST TRAVERSAL(recursive)
+4.DEPTH FIRST TRAVERSAL(non-recursive)
+5.BREADTH FIRST TRAVERSAL(non-recursive)
+1
+Enter no. of User: 3
+
+Enter Head name of 1 User: A
+
+Enter Head name of 2 User: B
+
+Enter Head name of 3 User: C
+
+Enter name of friend of A : B
+Do you want to add more friends (y/n): n
+
+Enter name of friend of B : C
+Do you want to add more friends (y/n): n
+
+Enter name of friend of C : A
+Do you want to add more friends (y/n): y
+
+Enter name of friend of C : B
+Do you want to add more friends (y/n): n
+DO YOU WANT MAIN MENU (yes=1):
+1
+*****MENU*****
+1.CREATE GRAPH
+2.DISPLAY ADJACENCY LIST
+3.DEPTH FIRST TRAVERSAL(recursive)
+4.DEPTH FIRST TRAVERSAL(non-recursive)
+5.BREADTH FIRST TRAVERSAL(non-recursive)
+2
+
+Friends of A are:
+A->B->
+
+
+Friends of B are:
+B->C->
+
+
+Friends of C are:
+C->A->B->
+
+DO YOU WANT MAIN MENU (yes=1):
+1
+*****MENU*****
+1.CREATE GRAPH
+2.DISPLAY ADJACENCY LIST
+3.DEPTH FIRST TRAVERSAL(recursive)
+4.DEPTH FIRST TRAVERSAL(non-recursive)
+5.BREADTH FIRST TRAVERSAL(non-recursive)
+3
+
+Enter the name of starting User : B
+
+The Depth First Traveral is :
+B->C->A->
+
+DO YOU WANT MAIN MENU (yes=1):
+1
+*****MENU*****
+1.CREATE GRAPH
+2.DISPLAY ADJACENCY LIST
+3.DEPTH FIRST TRAVERSAL(recursive)
+4.DEPTH FIRST TRAVERSAL(non-recursive)
+5.BREADTH FIRST TRAVERSAL(non-recursive)
+4
+
+Enter the name of starting User : B
+
+The Breadth First Traveral is :
+B
+C
+A
+DO YOU WANT MAIN MENU (yes=1):
+1
+*****MENU*****
+1.CREATE GRAPH
+2.DISPLAY ADJACENCY LIST
+3.DEPTH FIRST TRAVERSAL(recursive)
+4.DEPTH FIRST TRAVERSAL(non-recursive)
+5.BREADTH FIRST TRAVERSAL(non-recursive)
+5
+
+Enter the name of starting User : A
+
+The Breadth First Traveral is :
+A
+B
+C
+DO YOU WANT MAIN MENU (yes=1):
+0
+mitwpu@C04L0927A:~$ 
+*/
