@@ -1,0 +1,211 @@
+
+#include<iostream>
+#include<string.h>
+using namespace std;
+#define MAX 10
+
+class student
+{
+  int marks;
+  string name;
+  
+  friend class heap;
+};
+
+class heap
+{
+ student heap_array[MAX];
+ int n;
+ int min_max;
+ 
+ public:
+ void create_heap();
+ void display();
+ void insert_heap(int index);
+ void extract();
+ 
+ 
+ };
+ 
+ void heap::create_heap()
+ {
+   student s;
+       cout<<"Enter 1 for max and 0 for min heap:";
+       cin>>min_max;
+   
+       cout<<"Enter the no students:";
+       cin>>n;
+      
+       
+       for(int i=1;i<=n;i++)
+       {
+       
+       cout<<"Student Info:\n";  
+       cout<<"Enter the marks :";
+       cin>>s.marks;
+      
+       cout<<"Enter the name :";
+       cin>>s.name;
+       
+       heap_array[i]=s;
+       insert_heap(i);
+       }
+}
+
+void heap::insert_heap(int index)
+{
+  int i=index;
+  student s;
+  s=heap_array[index];
+  
+  if (min_max==1)
+  {
+     while(i>1 && s.marks>heap_array[i/2].marks)
+     {
+         heap_array[i]=heap_array[i/2];
+         i=i/2;
+     }
+     
+     heap_array[i]=s;
+     
+  }  
+     
+  else
+  {
+     while(i>1 && s.marks<heap_array[i/2].marks)
+     {
+         heap_array[i]=heap_array[i/2];
+         i=i/2;
+     }
+     
+     heap_array[i]=s;
+     
+  }     
+  
+}
+
+void heap::display()
+{
+  cout<<"Heap\n";
+  for(int i=0;i<=n;i++)
+  {
+     cout<<heap_array[i].marks<<"  "<<heap_array[i].name<<"  ";
+     
+  }
+ }
+ 
+void heap::extract()
+{
+  if(min_max==1)
+  {
+  cout<<"Student with maximum marks is:"<<heap_array[1].marks;
+  cout<<"  "<<heap_array[1].name;
+  }
+  else
+ {
+  cout<<"Student with minimum marks is:"<<heap_array[1].marks;
+  cout<<"  "<<heap_array[1].name;
+ } 
+}      
+       
+int main()
+{
+  int ch;
+  char ch1;
+  
+  heap h1;
+  
+  do
+  {
+    cout<<"Enter the choice\n1)create\n2)display\n3)extract\n";
+    cin>>ch;
+    
+    switch(ch)
+    {
+       case 1:h1.create_heap();
+              break;
+       case 2:h1.display();
+              break;
+       case 3:h1.extract();
+              break;        
+     }
+       cout<<"Do you want to continue?(y/n)";
+       cin>>ch1;
+       
+       
+  }while(ch1=='y');
+  
+  return 0;
+  
+}     
+       
+/*********output*******************88       
+Enter the choice
+1)create
+2)display
+3)extract1
+Enter 1 for max and 0 for min heap:1
+Enter the no students6
+Student Info:Enter the marks :10
+Enter the name :akshada
+Student Info:Enter the marks :100
+Enter the name :dhanu
+Student Info:Enter the marks :8
+Enter the name :akshi
+Student Info:Enter the marks :0
+Enter the name :aditig
+Student Info:Enter the marks :1
+Enter the name :deeva
+Student Info:Enter the marks :5
+Enter the name :aarushi
+Do you want to continue?(y/n)y
+
+Enter the choice
+1)create
+2)display
+3)extract2
+Heap	
+0		100		10		8		0	1   5	
+Do you want to continue?(y/n)y
+Enter the choice
+1)create
+2)display
+3)extract3
+
+Maximum marks are:100
+
+Do you want to continue?(y/n)y
+Enter the choice
+1)create
+2)display
+3)extract1
+Enter 1 for max and 0 for min heap:0
+Enter the no students7
+Student Info:Enter the marks :100
+Enter the name :tej
+Student Info:Enter the marks :10
+Enter the name :dhana
+Student Info:Enter the marks :60
+Enter the name :piyu
+Student Info:Enter the marks :50
+Enter the name :raj
+Student Info:Enter the marks :110
+Enter the name :deeva
+Student Info:Enter the marks :90
+Enter the name :eva
+Student Info:Enter the marks :200
+Enter the name :angel
+Do you want to continue?(y/n)y
+Enter the choice
+1)create
+2)display
+3)extract2
+Heap
+	0		10		50		60		100 	110		90		200	
+Do you want to continue?(y/n)y
+Enter the choice
+1)create
+2)display
+3)extract3
+
+Minimum marks are:10     
