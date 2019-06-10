@@ -1,0 +1,187 @@
+#include <iostream>
+using namespace std;
+#define inf 9999
+
+class graph
+{
+        int n,e;
+        int cost[10][10];
+public:
+        graph();
+        void accept();
+        void display();
+        int prim(int t[30][30]);
+};
+
+graph::graph()
+{
+	cout<<"ENTER THE NUMBER OF VERTICES"<<endl;
+	cin>>n;
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			cost[i][j]=inf;
+		}
+	}
+}	
+
+void graph::accept()
+{
+	int ch;int x,y;
+	cout<<"ENTER THE TOTAL EDGES"<<endl;
+	cin>>e;
+	for(int i=0;i<e;i++)
+	{
+		cout<<"ENTER START AND END VERTICES"<<endl;
+		cin>>x>>y;
+		cout<<"ENTER COST"<<endl;
+		cin>>cost[x][y];
+		cost[y][x]=	cost[x][y];
+	}
+}
+void graph::display()
+{
+	for(int i=0;i<n;i++)
+	{
+		
+		for(int j=0;j<n;j++)
+		{
+			cout<<cost[i][j]<<"\t";
+		}
+		cout<<endl;
+	}
+}
+int graph::prim(int t[30][30]) 
+{
+	int stv, nearest[50], r, min, j, mincost=0;
+	cout << "Enter the starting vertex to perform prims\n";
+	cin >> stv;
+	nearest[stv] = -1;
+	for(int i=0; i<n; i++)
+ 	{
+		if(i!=stv) 
+		{
+			nearest[i] = stv;
+		}
+	}
+	r=0;
+	for(int i=1; i<n; i++) 
+	{
+		min = inf;
+		for(int k=0; k<n; k++) 
+		{
+			if(nearest[k]!=-1 && cost[k][nearest[k]] < min)
+			{
+				j=k;
+				min = cost[k][nearest[k]];
+			}
+		}
+		t[r][0] = j;
+		t[r][1] = nearest[j];
+		cout<<"Edge : "<<t[r][0]<<" and "<<t[r][1]<<"\t"<<"Cost is: "<<cost[j][nearest[j]];
+		cout<<endl;
+		
+		r++;
+		
+		mincost = mincost + cost[j][nearest[j]];
+		nearest[j] = -1;
+		for(int k=0; k<n; k++) 
+		{
+			if(nearest[k]!=-1 && cost[k][nearest[k]] > cost[k][j]) 
+			{
+				nearest[k] = j;
+			}
+		}
+	}
+		
+	return mincost;
+}
+
+
+int main() 
+{
+	int mini, tr[30][30];
+
+	graph g;
+	g.accept();
+	g.display();
+	
+	mini = g.prim(tr);
+	cout << "Minimum cost is: " << mini << endl;
+	
+	return 0;
+}
+
+/*OUTPUT
+mitwpu@C04L0824A:~$ g++ yashprim.cpp
+mitwpu@C04L0824A:~$ ./a.out
+ENTER THE NUMBER OF VERTICES
+6
+ENTER THE TOTAL EDGES
+10
+ENTER START AND END VERTICES
+1
+0
+ENTER COST
+3
+ENTER START AND END VERTICES
+2
+0
+ENTER COST
+8
+ENTER START AND END VERTICES
+2
+1
+ENTER COST
+2
+ENTER START AND END VERTICES
+3
+1
+ENTER COST
+6
+ENTER START AND END VERTICES
+4
+0
+ENTER COST
+1
+ENTER START AND END VERTICES
+4
+1
+ENTER COST
+1
+ENTER START AND END VERTICES
+4 
+2
+ENTER COST
+2
+ENTER START AND END VERTICES
+4
+3
+ENTER COST
+2
+ENTER START AND END VERTICES
+5
+3
+ENTER COST
+4
+ENTER START AND END VERTICES
+5
+4
+ENTER COST
+3
+9999	3	8	9999	1	9999	
+3	9999	2	6	1	9999	
+8	2	9999	9999	2	9999	
+9999	6	9999	9999	2	4	
+1	1	2	2	9999	3	
+9999	9999	9999	4	3	9999	
+Enter the starting vertex to perform prims
+0
+Edge : 4 and 0	Cost is: 1
+Edge : 1 and 4	Cost is: 1
+Edge : 2 and 4	Cost is: 2
+Edge : 3 and 4	Cost is: 2
+Edge : 5 and 4	Cost is: 3
+Minimum cost is: 9
+/*
