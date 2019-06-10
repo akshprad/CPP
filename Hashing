@@ -1,0 +1,205 @@
+/*
+NAME:AKSHADA PRADHAN
+CLASS:SYBTECH(CSE)
+DIV:PANEL 5
+PROBLEM STATEMENT: HASHING
+*/
+
+
+
+#include<iostream>
+using namespace std;
+# define max 10
+
+class student                        //student class  
+{
+int roll;
+char grade;
+string name;
+public : student()                   //constructor
+{
+roll=-1;
+name='\0';
+grade='-';	
+}
+friend class hashing;
+};
+
+class hashing//hashing class
+{
+student ht[max];//object of student class
+public:
+void create_linearprob();
+void create_linearprob_withreplacement();
+void display();
+};
+
+
+void hashing::display()//display function
+{
+	int i;
+	cout<<"INDEX\tROLL\tNAME\tGRADE\t"<<endl;
+	for(i=0;i<max;i++)
+	{
+		cout<<i<<"\t"<<ht[i].roll<<"\t"<<ht[i].name<<"\t"<<ht[i].grade<<"\t"<<endl;
+	}
+}
+
+
+void hashing::create_linearprob()        //linear probing without replacement
+{
+string n;
+char g;
+int r;
+char ch;
+do
+{
+cout<<"Enter the roll no.,name,grade"<<endl;
+cin>>r>>n>>g;
+
+
+	int flag=0;
+	int i;
+	int loc;
+
+	loc=(r)%(max);//applying hash function
+	if(ht[loc].roll==-1)
+	{
+		ht[loc].roll=r;
+		ht[loc].name=n;
+		ht[loc].grade=g;
+	}
+	else
+	{
+		for(i=loc+1; i != loc ;i=(i+1)%max)
+		{
+			if(ht[i].roll==-1)
+			{
+				ht[i].roll=r;
+				ht[i].name=n;
+		        ht[i].grade=g;
+				flag=0;
+				break;
+			}	
+			else
+			{
+				flag=1;
+			}
+		}
+	}
+	if(flag==1)
+	{
+		cout<<"Hash Table is full"<<endl;
+	}
+cout<<"Do you want to enter another record(y/n)"<<endl;
+cin>>ch;
+}while(ch=='y');
+}
+
+void hashing::create_linearprob_withreplacement()    //linear probing with replacement
+{
+string n;
+char g;
+int r;
+char ch;
+student temp;
+do//do while loop
+{
+cout<<"Enter the roll no.,name,grade"<<endl;
+cin>>r>>n>>g;
+
+
+	int flag=0;
+	int i;
+	int loc,newloc;
+
+	loc=(r)%(max);//applying hash function
+	if(ht[loc].roll==-1)
+	{
+		ht[loc].roll=r;
+		ht[loc].name=n;
+		ht[loc].grade=g;
+	}
+	else
+	{
+	newloc=ht[loc].roll % max;
+	temp.roll=r;
+	temp.name=n;
+	temp.grade=g;
+	
+	    if(newloc != loc)
+	    {
+	        temp=ht[loc];
+	        ht[loc].roll=r;
+	        ht[loc].name=n;
+	        ht[loc].grade=g;
+	    }
+	
+		for(i=loc+1; i != loc ;i=(i+1)%max)
+		{
+			if(ht[i].roll==-1)
+			{
+				ht[i].roll=r;
+				ht[i].name=n;
+		        ht[i].grade=g;
+				flag=0;
+				break;
+			}	
+			else
+			{
+				flag=1;
+			}
+		}
+	}
+	if(flag==1)
+	{
+		cout<<"Hash Table is full"<<endl;
+	}
+cout<<"Do you want to enter another record(y/n)"<<endl;
+cin>>ch;
+}while(ch=='y');
+}
+
+
+
+
+
+int main()
+{	
+hashing h;
+char x,s;
+int chc;
+	do//do statement
+	{
+
+		cout<<"*****MENU*****"<<endl;
+		cout<<"1.CREATE HASH TABLE WITHOUT REPLACEMENT"<<endl;
+		cout<<"2.CREATE HASH TABLE WITH REPLACEMENT"<<endl;
+		cout<<"3.DISPLAY HASH TABLE"<<endl;
+		cout<<"Enter your choice"<<endl;
+		cin>>chc;//accepting choice from the user
+			switch(chc)//switch case
+			{
+			  case 1:
+					h.create_linearprob();
+					 	break;
+					 	
+			  case 2:
+					h.create_linearprob_withreplacement();
+					 	break;					 	
+					 
+			   case 3:
+				cout<<"Hash table is:"<<endl;
+	                        h.display();
+			 	break;
+					 					
+			   default:cout<<"YOU HAVE ENTERED THE WRONG OPTION"<<endl;//default statement
+				
+			}
+	cout<<"DO YOU WANT MAIN MENU(y/n)"<<endl;
+	cin>>s;
+	}while(s=='y');//while statement of do-while loop
+return 0;	
+}
+
+
